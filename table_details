@@ -1,0 +1,83 @@
+CREATE OR REPLACE TABLE Customer (
+    Customer_ID VARCHAR(50) NOT NULL,
+    First_Name VARCHAR(100),
+    Last_Name VARCHAR(100),
+    DOB DATE,
+    Email VARCHAR(255),
+    Phone VARCHAR(20),
+    Address VARCHAR(500),
+    Created_At TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (Customer_ID)
+);
+
+CREATE OR REPLACE TABLE Branch (
+    Branch_ID VARCHAR(50) NOT NULL,
+    Branch_Name VARCHAR(200),
+    Address VARCHAR(500),
+    Manager_ID VARCHAR(50),
+    PRIMARY KEY (Branch_ID)
+);
+
+CREATE OR REPLACE TABLE Employee (
+    Employee_ID VARCHAR(50) NOT NULL,
+    First_Name VARCHAR(100),
+    Last_Name VARCHAR(100),
+    Role VARCHAR(50),
+    Branch_ID VARCHAR(50),
+    PRIMARY KEY (Employee_ID),
+    FOREIGN KEY (Branch_ID) REFERENCES Branch(Branch_ID)
+);
+
+CREATE OR REPLACE TABLE Account (
+    Account_ID VARCHAR(50) NOT NULL,
+    Customer_ID VARCHAR(50),
+    Branch_ID VARCHAR(50),
+    Account_Type VARCHAR(50),
+    Balance NUMBER(15,2),
+    Created_At TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (Account_ID),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (Branch_ID) REFERENCES Branch(Branch_ID)
+);
+
+CREATE OR REPLACE TABLE Transaction (
+    Transaction_ID VARCHAR(50) NOT NULL,
+    Account_ID VARCHAR(50),
+    Transaction_Type VARCHAR(50),
+    Amount NUMBER(15,2),
+    Transaction_Date TIMESTAMP_NTZ,
+    Description VARCHAR(500),
+    PRIMARY KEY (Transaction_ID),
+    FOREIGN KEY (Account_ID) REFERENCES Account(Account_ID)
+);
+
+CREATE OR REPLACE TABLE Loan (
+    Loan_ID VARCHAR(50) NOT NULL,
+    Customer_ID VARCHAR(50),
+    Account_ID VARCHAR(50),
+    Loan_Type VARCHAR(100),
+    Principal_Amount NUMBER(15,2),
+    Interest_Rate FLOAT,
+    Start_Date DATE,
+    End_Date DATE,
+    Status VARCHAR(50),
+    PRIMARY KEY (Loan_ID),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (Account_ID) REFERENCES Account(Account_ID)
+);
+
+CREATE OR REPLACE TABLE Credit_Score (
+    Customer_ID VARCHAR(50) NOT NULL,
+    Score_Date DATE NOT NULL,
+    Score INT,
+    Score_Source VARCHAR(100),
+    PRIMARY KEY (Customer_ID, Score_Date),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+
+version: 2
+
+models:
+  - name: my_model
+    description: "This is a sample model"
+    tags: ['daily', 'finance']  # ← Add your tags here
