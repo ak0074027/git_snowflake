@@ -1,0 +1,35 @@
+Creation of Private REPOSITORY--snowflake_private
+---Secure object 
+create or replace secret my_snowflake_secret
+type=password
+username='ak0074027'
+password='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' ;
+
+----create integration object with secure object 
+
+CREATE OR REPLACE API INTEGRATION my_snowflake_git_api_intg
+    API_PROVIDER = git_https_api
+    API_ALLOWED_PREFIXES = ('https://github.com/ak0074027/')
+    ALLOWED_AUTHENTICATION_SECRETS = (my_snowflake_secret)
+    ENABLED = true;
+
+CREATE OR REPLACE GIT REPOSITORY my_snowflake_github_repo
+  WITH
+    API_INTEGRATION = my_snowflake_git_api_intg,
+    GIT_CREDENTIALS = my_snowflake_secret,
+    ORIGIN = 'https://github.com/ak0074027/snowflake_private';
+	
+Creation of PUBLIC  REPOSITORY--snowflake_GIT	
+
+
+CREATE OR REPLACE API INTEGRATION my_snowflake_git_api_intg
+    API_PROVIDER = git_https_api
+    API_ALLOWED_PREFIXES = ('https://github.com/ak0074027/')
+    ENABLED = true;
+	
+	
+	
+	CREATE OR REPLACE GIT REPOSITORY my_snowflake_github_public_repo
+    WITH
+    API_INTEGRATION = my_snowflake_git_api_intg
+    ORIGIN = 'https://github.com/ak0074027/git_snowflake';
